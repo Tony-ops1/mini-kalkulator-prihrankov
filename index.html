@@ -1,34 +1,27 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini kalkulator prihrankov – montaža SE 1.10.2024</title>
+
+<style>
 body {
     font-family: Arial, sans-serif;
     max-width: 420px;
     margin: auto;
     padding: 15px;
-
-    /* LOGOTIP - lepo zgoraj */
-    background: #f4f6f8 url('./elektro-ljubljana.png') no-repeat center 40px;
-    background-size: 160px auto;
-
-    /* lepo senčenje */
-    box-shadow: 0 0 35px rgba(0,0,0,0.22);
-    border-radius: 16px;
-    background-clip: padding-box;
+    background: #f4f6f8;  /* brez slike */
 }
 
-/* NASLOV - premaknjen nižje od logotipa */
-h1 {
-    text-align: center;
-    font-size: 18px;
-    margin-top: 180px;   /* bilo 200 = preveč, 180 je idealno */
-    margin-bottom: 15px;
-}
-
+/* Naslov */
 h1 { 
     text-align: center; 
     font-size: 18px; 
-    margin-top: 200px;  /* premakne naslov pod logotip */
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
 }
 
+/* Polja */
 label { 
     font-weight: bold; 
     margin-top: 10px; 
@@ -39,6 +32,8 @@ input {
     padding: 8px; 
     margin-top: 4px; 
 }
+
+/* Gumb */
 button { 
     margin-top: 15px; 
     padding: 10px; 
@@ -49,12 +44,14 @@ button {
     border: none; 
     cursor: pointer; 
 }
+
+/* Rezultati */
 .result { 
     background: white; 
     margin-top: 15px; 
     padding: 12px; 
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    box-shadow: 0 0 15px rgba(0,0,0,0.12);
 }
 .total { 
     font-weight: bold; 
@@ -70,4 +67,54 @@ button {
 <label>Letni strošek elektrike (€)</label>
 <input id="elektrika" type="number" value="620">
 
+<label>Sezone brez kurjave</label>
+<input id="sezone" type="number" value="3">
 
+<label>Letni kilometri z dizlom</label>
+<input id="km" type="number" value="25000">
+
+<label>Poraba dizla (l / 100 km)</label>
+<input id="poraba" type="number" value="8">
+
+<label>Cena dizla (€ / l)</label>
+<input id="cena" type="number" step="0.01" value="1.60">
+
+<label>Investicija v napravo (€)</label>
+<input id="investicija" type="number" value="4500">
+
+<button onclick="izracun()">Izračunaj</button>
+
+<div class="result">
+<p>🚗 Prihranek goriva / leto: <span id="avto">0</span> €</p>
+<p>⚡ Prihranek elektrike / leto: <span id="elek">0</span> €</p>
+<p>🔥 Že prihranjeno ogrevanje: <span id="kurjava">0</span> €</p>
+<hr>
+<p class="total">💰 Letni PLUS: <span id="letni">0</span> €</p>
+<p class="total">📈 Skupaj v plusu danes: <span id="skupaj">0</span> €</p>
+</div>
+
+<script>
+function izracun() {
+    let km = Number(document.getElementById("km").value);
+    let poraba = Number(document.getElementById("poraba").value);
+    let cena = Number(document.getElementById("cena").value);
+    let sezone = Number(document.getElementById("sezone").value);
+    let investicija = Number(document.getElementById("investicija").value);
+    let elek = Number(document.getElementById("elektrika").value);
+
+    let prihranekAvto = km / 100 * poraba * cena;
+    let zePrihranjenoKurjava = sezone * 600;
+    let letniPlus = prihranekAvto + elek;
+    let skupajPlus = zePrihranjenoKurjava + letniPlus - investicija;
+
+    document.getElementById("avto").textContent = prihranekAvto.toFixed(0);
+    document.getElementById("kurjava").textContent = zePrihranjenoKurjava.toFixed(0);
+    document.getElementById("elek").textContent = elek.toFixed(0);
+    document.getElementById("letni").textContent = letniPlus.toFixed(0);
+    document.getElementById("skupaj").textContent = skupajPlus.toFixed(0);
+}
+izracun();
+</script>
+
+</body>
+</html>
